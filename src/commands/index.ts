@@ -30,7 +30,6 @@ export class Commands {
         this.handler = handler;
     }
 
-
     public async handleCommand(interaction: ChatInputCommandInteraction): Promise<void> {
         if (!interaction.isChatInputCommand()) return;
         const command = this.commands.find(cmd => cmd.name === interaction.commandName);
