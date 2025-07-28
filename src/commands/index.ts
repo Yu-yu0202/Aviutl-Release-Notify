@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, REST, Routes, SlashCommandBuilder, ApplicationCommandDataResolvable } from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder, ApplicationCommandDataResolvable } from "discord.js";
 import { ping } from "./ping.js";
 import { UpdateHandler } from "../handler/UpdateHandler.js";
 import { test } from "./test.js";
