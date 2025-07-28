@@ -40,8 +40,11 @@ export class UpdateHandler extends DiscordNotifyHandler {
 
     private async update(rss: string): Promise<string | void> {
         console.info('[UpdateHandler] Checking for updates...');
+        if (!fs.existsSync("rss")) {
+            fs.mkdirSync("rss", { recursive: true });
+        }
         if (!fs.existsSync("rss/aviutl.xml")) {
-            fs.writeFileSync("rss/aviutl.xml", rss);
+            fs.writeFileSync("rss/aviutl.xml", "");
         }
         const old = fs.readFileSync("rss/aviutl.xml", "utf-8");
         if (old !== rss) {

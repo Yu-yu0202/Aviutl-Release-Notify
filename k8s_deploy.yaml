@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aviutl-release-notify
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aviutl-release-notify
+  template:
+    metadata:
+      labels:
+        app: aviutl-release-notify
+    spec:
+      containers:
+        - name: aviutl-release-notify
+          image: yuyu0202/aviutl-release-notify:latest
+          env:
+            - name: DISCORD_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: aviutl-release-notify-secret
+                  key: DISCORD_BOT_TOKEN
+            - name: DISCORD_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aviutl-release-notify-secret
+                  key: DISCORD_CLIENT_ID
+            - name: DISCORD_CHANNEL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aviutl-release-notify-secret
+                  key: DISCORD_CHANNEL_ID
+            - name: ADMIN_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aviutl-release-notify-secret
+                  key: ADMIN_ID
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aviutl-release-notify
+spec:
+  selector:
+    app: aviutl-release-notify

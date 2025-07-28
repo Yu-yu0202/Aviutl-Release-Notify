@@ -1,0 +1,4 @@
+.env/
+rss/
+node_modules/
+dist/

@@ -1,13 +1,19 @@
 import { XMLParser } from 'fast-xml-parser';
-import { ButtonBuilder, ButtonStyle, Client, ContainerBuilder, MessageFlags, SectionBuilder, SeparatorBuilder, SeparatorSpacingSize, TextDisplayBuilder} from 'discord.js';
+import { ButtonBuilder, ButtonStyle, Client, ContainerBuilder, MessageFlags, SectionBuilder, SeparatorBuilder, SeparatorSpacingSize, TextDisplayBuilder, TextChannel, ChannelType } from 'discord.js';
 import pkg from '../../package.json' with {type: "json"};
 
 export class DiscordNotifyHandler {
     private client: Client;
-    private channelId: string;
-    constructor(client: Client, channelId: string) {
+    private channelIds: string[];
+    constructor(client: Client, channelIds: string[] | string) {
         this.client = client;
-        this.channelId = channelId;
+        if (Array.isArray(channelIds)) {
+            this.channelIds = channelIds.flatMap(id => typeof id === "string" ? id.split(",").map(s => s.trim()).filter(Boolean) : []);
+        } else if (typeof channelIds === "string") {
+            this.channelIds = channelIds.split(",").map(s => s.trim()).filter(Boolean);
+        } else {
+            this.channelIds = [];
+        }
     }
     public notify(raw_rss: string) {
         const parser = new XMLParser();
@@ -34,7 +40,7 @@ export class DiscordNotifyHandler {
         )
         container.addTextDisplayComponents(
             new TextDisplayBuilder()
-                .setContent(`AviUtl ${title[1] + title[2]}のダウンロードリンク`)
+                .setContent(`AviUtl ${title[1] + " " + title[2]}のダウンロードリンク`)
         )
         container.addSectionComponents(
             new SectionBuilder()
@@ -67,21 +73,30 @@ export class DiscordNotifyHandler {
         )
         container.addTextDisplayComponents(
             new TextDisplayBuilder()
-                .setContent("-# このツールの使用による問題は、作者は一切責任を負いません。正確な情報を確認してください。")
+                .setContent("-# このツールの使用により生じた問題は、作者は一切責任を負いません。\n-# 正確な情報を確認してください。")
         )
         container.addTextDisplayComponents(
             new TextDisplayBuilder()
                 .setContent(`-# AviUtl Release Notify v${pkg.version} by Yu-yu0202`)
         )
 
-        const channel = this.client?.channels.cache.get(this.channelId);
-        if (!channel || !channel.isTextBased() || channel.type !== 0) {
-            console.error('Channel not found or is not a text channel.');
-            return;
-        }
-        channel.send({
-            components: [container],
-            flags: MessageFlags.IsComponentsV2
-        })
+        this.channelIds.forEach(channelId => {
+            console.info(`[DiscordNotifyHandler] Sending message to channel (${channelId})...`);
+            const channel = this.client?.channels.cache.get(channelId);
+            if (!channel || !channel.isTextBased()) {
+                console.error(`[DiscordNotifyHandler] Channel (${channelId}) not found or is not a text channel.`);
+                return;
+            }
+            if (typeof (channel as any).send !== "function") {
+                console.error(`[DiscordNotifyHandler] Cannot send message in channel (${channelId}).`);
+                return;
+            }
+            (channel as TextChannel).send({
+                components: [container],
+                flags: MessageFlags.IsComponentsV2
+            }).catch((err: any) => {
+                console.error(`[DiscordNotifyHandler] Failed to send message to channel (${channelId}):`, err);
+            });
+        });
     }
 }
