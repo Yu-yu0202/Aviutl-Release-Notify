@@ -19,6 +19,6 @@ export class clear implements metadata {
         } else {
             console.warn("[UpdateHandler] No RSS data found to clear.");
         }
-        await interaction.editReply({"content": "rss,xmlデータをクリアしました。"});
+        await interaction.editReply({"content": "rss/xmlデータをクリアしました。"});
     }
 }
