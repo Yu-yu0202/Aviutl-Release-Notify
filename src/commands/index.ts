@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, ApplicationCommandDataResolvable } from "discord.js";
 import { ping } from "./ping.js";
 import { UpdateHandler } from "../handler/UpdateHandler.js";
-import { test } from "./test.js";
+import { update } from "./update.js";
 import { clear } from "./clear.js";
 
 export interface metadata {
@@ -13,7 +13,7 @@ export interface metadata {
 export class Commands {
     public commands: metadata[] = [
         new ping,
-        new test,
+        new update,
         new clear
     ]
 
@@ -38,7 +38,7 @@ export class Commands {
                 command.execute(interaction);
                 break;
             }
-            case 'test': {
+            case 'update': {
                 (interaction as any).handler = this.handler;
                 command.execute(interaction);
                 break;
