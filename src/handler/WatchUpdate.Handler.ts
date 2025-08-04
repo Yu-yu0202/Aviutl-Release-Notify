@@ -1,11 +1,11 @@
 import nodeCron from "node-cron";
-import { RSSHandler } from "./RSSHandler.js";
+import { RSSHandler } from "./RSS.handler.js";
 import * as fs from "fs";
-import { DiscordNotifyHandler } from "./DiscordNotifyHandler.js";
+import { NotifyToDiscordHandler } from "./NotifyToDiscord.handler.js";
 import { XMLParser } from 'fast-xml-parser';
 import { Client } from "discord.js";
 
-export class UpdateHandler extends DiscordNotifyHandler {
+export class WatchUpdateHandler extends NotifyToDiscordHandler {
     private cron : any;
     constructor(client: Client, channelId: string) {
         super(client, channelId);

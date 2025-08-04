@@ -1,8 +1,11 @@
 import 'dotenv/config';
-import { UpdateHandler } from './handler/UpdateHandler.js';
+import { WatchUpdateHandler } from './handler/WatchUpdate.handler.js';
 import { Client, GatewayIntentBits, REST, Routes } from 'discord.js';
 import { Commands } from './commands/index.js';
+import { WhatsNewUtil } from './util/whats-new.util.js';
 await import('dotenv/config');
+
+await WhatsNewUtil.init();
 
 const client = new Client({
     intents: [
@@ -18,7 +21,7 @@ if (!channelId) {
     process.exit(1);
 }
 
-const handler = new UpdateHandler(client, channelId);
+const handler = new WatchUpdateHandler(client, channelId);
 const commandManager = new Commands(handler);
 
 if (!process.env.DISCORD_BOT_TOKEN) {

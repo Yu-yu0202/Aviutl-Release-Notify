@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, ApplicationCommandDataResolvable } from "discord.js";
+import { WatchUpdateHandler } from "../handler/WatchUpdate.handler";
+
 import { ping } from "./ping.js";
-import { UpdateHandler } from "../handler/UpdateHandler.js";
 import { update } from "./update.js";
 import { clear } from "./clear.js";
 
@@ -24,9 +25,9 @@ export class Commands {
             .toJSON();
     });
 
-    private handler: UpdateHandler;
+    private handler: WatchUpdateHandler;
 
-    constructor(handler: UpdateHandler) {
+    constructor(handler: WatchUpdateHandler) {
         this.handler = handler;
     }
 

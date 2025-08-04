@@ -1,8 +1,9 @@
 import { XMLParser } from 'fast-xml-parser';
-import { ButtonBuilder, ButtonStyle, Client, ContainerBuilder, MessageFlags, SectionBuilder, SeparatorBuilder, SeparatorSpacingSize, TextDisplayBuilder, TextChannel, ChannelType } from 'discord.js';
+import { ButtonBuilder, ButtonStyle, Client, ContainerBuilder, MessageFlags, SectionBuilder, SeparatorBuilder, SeparatorSpacingSize, TextDisplayBuilder, TextChannel, ChannelType, TextDisplayComponent } from 'discord.js';
 import pkg from '../../package.json' with {type: "json"};
+import { WhatsNewUtil } from "../util/whats-new.util.js";
 
-export class DiscordNotifyHandler {
+export class NotifyToDiscordHandler {
     private client: Client;
     private channelIds: string[];
     constructor(client: Client, channelIds: string[] | string) {
@@ -15,17 +16,17 @@ export class DiscordNotifyHandler {
             this.channelIds = [];
         }
     }
-    public notify(raw_rss: string) {
-        const parser = new XMLParser();
-        const rss = parser.parse(raw_rss);
-        const message = rss.rss?.channel?.item?.title.split('を')?.[0] + "が公開されました！"
-        const title = rss.rss?.channel?.item?.title.split(' ')
+    public async notify(raw_rss: string) {
+        const parser: XMLParser = new XMLParser();
+        const rss: any = parser.parse(raw_rss);
+        const message: string = rss.rss?.channel?.item?.title.split('を')?.[0] + "が公開されました！"
+        const title: string[] = rss.rss?.channel?.item?.title.split(' ')
         const downloadLink: {setup: string, zip: string} = {
             setup: `https://spring-fragrance.mints.ne.jp/aviutl/AviUtl2${String(title[2]).toLowerCase()}_setup.exe`,
             zip: `https://spring-fragrance.mints.ne.jp/aviutl/aviutl2${String(title[2]).toLowerCase()}.zip`
         };
-
-        const container = new ContainerBuilder();
+        const whatsNew: string = await WhatsNewUtil.getWhatsNew(downloadLink.zip, title[2].toLowerCase());
+        const container: ContainerBuilder = new ContainerBuilder();
         container.addTextDisplayComponents(
             new TextDisplayBuilder()
                 .setContent(`### ${message}`)
@@ -33,6 +34,14 @@ export class DiscordNotifyHandler {
         container.addTextDisplayComponents(
             new TextDisplayBuilder()
                 .setContent(`${message}`)
+        )
+        container.addTextDisplayComponents(
+            new TextDisplayBuilder()
+                .setContent("更新点(AviUtl2.txtから抜粋):")
+        )
+        container.addTextDisplayComponents(
+            new TextDisplayBuilder()
+                .setContent(`\`\`\`txt\n${whatsNew}\n\`\`\``)
         )
         container.addSeparatorComponents(
             new SeparatorBuilder()
