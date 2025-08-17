@@ -7,22 +7,22 @@ await import('dotenv/config');
 
 await WhatsNewUtil.init();
 
-const client = new Client({
+const client: Client = new Client({
     intents: [
         GatewayIntentBits.Guilds, 
         GatewayIntentBits.GuildMessages
     ]
 })
-const channelId = process.env.DISCORD_CHANNEL_ID;
-const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN!);
+const channelId: string | undefined = process.env.DISCORD_CHANNEL_ID;
+const rest: REST = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN!);
 
 if (!channelId) {
     console.error('✖DISCORD_CHANNEL_ID is not set in .env');
     process.exit(1);
 }
 
-const handler = new WatchUpdateHandler(client, channelId);
-const commandManager = new Commands(handler);
+const handler: WatchUpdateHandler = new WatchUpdateHandler(client, channelId);
+const commandManager: Commands = new Commands(handler);
 
 if (!process.env.DISCORD_BOT_TOKEN) {
     console.error('✖DISCORD_BOT_TOKEN is not set in .env');

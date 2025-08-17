@@ -2,8 +2,8 @@ import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import { metadata } from "./";
 
 export class ping implements metadata {
-    public name = "ping";
-    public description = "Pingを表示";
+    public name: string = "ping";
+    public description: string = "Pingを表示";
 
     public async execute(interaction: ChatInputCommandInteraction): Promise<void> {
         const embed = new EmbedBuilder()

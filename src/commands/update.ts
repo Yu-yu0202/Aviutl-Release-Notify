@@ -7,8 +7,8 @@ interface CustomInteraction extends ChatInputCommandInteraction {
 }
 
 export class update implements metadata {
-    public name = "update";
-    public description = "手動トリガーでリリースの確認を行います";
+    public name: string = "update";
+    public description: string = "手動トリガーでリリースの確認を行います";
     public async execute(interaction: ChatInputCommandInteraction, ): Promise<void> {
         console.log("[UpdateHandler] Update command executed, starting update process...");
         await interaction.deferReply();

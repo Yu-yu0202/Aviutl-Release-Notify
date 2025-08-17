@@ -1,22 +1,22 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import iconv from "iconv-lite";
-import { load } from "cheerio";
+import { CheerioAPI, load } from "cheerio";
 import { create } from "xmlbuilder2";
 
 export class RSSHandler {
     public static async createRSS(URL: string): Promise<string> {
-        const response = await axios.get<ArrayBuffer>(URL, {
+        const response: AxiosResponse<ArrayBuffer, any> = await axios.get<ArrayBuffer>(URL, {
             responseType: "arraybuffer",
         });
-        const decoded = iconv.decode(Buffer.from(response.data), "utf-8");
-        const $ = load(decoded);
+        const decoded: string = iconv.decode(Buffer.from(response.data), "utf-8");
+        const $: CheerioAPI = load(decoded);
         const items = $("table")
         const target = items.eq(5);
         const item: { title: string; date: string}[] = [];
 
         target.find("td").each((_, td) => {
-            const text = $(td).text().trim();
-            const dateMatch = text.match(/^(\d{4}\/\d{2}\/\d{2})(.*)/);
+            const text: string = $(td).text().trim();
+            const dateMatch: RegExpMatchArray | null = text.match(/^(\d{4}\/\d{2}\/\d{2})(.*)/);
             if (dateMatch) {
                 const [, date, title] = dateMatch;
                 item.push({

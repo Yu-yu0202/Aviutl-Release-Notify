@@ -16,7 +16,7 @@ export class NotifyToDiscordHandler {
             this.channelIds = [];
         }
     }
-    public async notify(raw_rss: string) {
+    public async notify(raw_rss: string): Promise<void> {
         const parser: XMLParser = new XMLParser();
         const rss: any = parser.parse(raw_rss);
         const message: string = rss.rss?.channel?.item?.title.split('を')?.[0] + "が公開されました！"
@@ -55,7 +55,7 @@ export class NotifyToDiscordHandler {
             new SectionBuilder()
                 .addTextDisplayComponents(
                     new TextDisplayBuilder()
-                        .setContent(`セットアップ版`)
+                        .setContent(`インストーラー版:`)
                 )
                 .setButtonAccessory(
                     new ButtonBuilder()
@@ -66,7 +66,7 @@ export class NotifyToDiscordHandler {
             new SectionBuilder()
                 .addTextDisplayComponents(
                     new TextDisplayBuilder()
-                        .setContent(`Zip版`)
+                        .setContent(`Zip版:`)
                 )
                 .setButtonAccessory(
                     new ButtonBuilder()

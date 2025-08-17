@@ -5,18 +5,20 @@ import * as path from "path";
 
 export class WhatsNewUtil {
     static async init() {
-        if (!fs.existsSync("./tmp")) {
-            fs.mkdirSync("./tmp");
+        if (!fs.existsSync("./data/tmp")) {
+            fs.mkdirSync("./data/tmp", { recursive: true });
         }
     }
 
-    static async getWhatsNew(url: string, version: string | undefined) {
-        await execa("curl", ["-OL", url], { cwd: "./tmp" });
-        await this.extractZip(`./tmp/aviutl2${version}.zip`, `./tmp/aviutl2${version}`);
+    static async getWhatsNew(url: string, version: string | undefined): Promise<string> {
+        await this.init();
+        
+        await execa("curl", ["-OL", url], { cwd: "./data/tmp" });
+        await this.extractZip(`./data/tmp/aviutl2${version}.zip`, `./data/tmp/aviutl2${version}`);
     
-        const txt = fs.readFileSync(`./tmp/aviutl2${version}/aviutl2.txt`, "utf-8");
-        fs.unlinkSync(`./tmp/aviutl2${version}.zip`);
-        fs.rmSync(`./tmp/aviutl2${version}`, { recursive: true, force: true });
+        const txt = fs.readFileSync(`./data/tmp/aviutl2${version}/aviutl2.txt`, "utf-8");
+        fs.unlinkSync(`./data/tmp/aviutl2${version}.zip`);
+        fs.rmSync(`./data/tmp/aviutl2${version}`, { recursive: true, force: true });
         const lines = txt.replace(/\r\n/g, "\n").split("\n");
     
         const pattern = new RegExp(
@@ -29,8 +31,32 @@ export class WhatsNewUtil {
         }
     
         const resultLines = lines.slice(lineNum).map(line => line.trim());
+
+        const latest = {
+            version: version,
+            date: resultLines[0].match(/\[(\d{4}\/\d{1,2}\/\d{1,2})\]/)?.[1] || "不明",
+            info: resultLines.join("\n")
+        }
+        
+        if (!fs.existsSync("./data")) {
+            fs.mkdirSync("./data", { recursive: true });
+        }
+        
+        fs.writeFileSync("./data/latest.json", JSON.stringify(latest, null, 2));
+
         return resultLines.join("\n");
-    }    
+    }
+
+    static async getFromFile(): Promise<{version: string, date: string, info: string}> {
+        return new Promise((resolve, reject) => {
+            if (!fs.existsSync("./data/latest.json")) {
+                reject(new Error("latest.json does not exist"));
+            }
+            const data = fs.readFileSync("./data/latest.json", "utf-8");
+            const latest = JSON.parse(data);
+            resolve({version: latest.version, date: latest.date, info: latest.info});
+        });
+    }
 
     private static extractZip(zipPath: string, extractPath: string): Promise<void> {
         return new Promise((resolve, reject) => {
