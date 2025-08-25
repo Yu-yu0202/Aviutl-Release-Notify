@@ -1,0 +1,37 @@
+{
+  "name": "aviutl-release-notify",
+  "version": "0.1.1",
+  "description": "",
+  "license": "proprietary",
+  "author": "Yu-yu0202",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "pnpm --silent lint && echo Lint passed. && pnpm --silent format && echo Code formatted. && tsc --project tsconfig.json && echo Build completed successfully!",
+    "lint": "eslint . --ext .ts,.js",
+    "format": "prettier --write .",
+    "start": "node --env-file=.env --experimental-sqlite dist/index.js"
+  },
+  "package-manager": "pnpm@10.15.0",
+  "devDependencies": {
+    "@eslint/js": "^9.34.0",
+    "@types/node": "^24.3.0",
+    "@types/yauzl": "^2.10.3",
+    "eslint": "^9.34.0",
+    "globals": "^16.3.0",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.40.0"
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "botmanager": "link:..\\BotManager",
+    "cheerio": "^1.1.2",
+    "discord.js": "^14.22.1",
+    "execa": "^9.6.0",
+    "fast-xml-parser": "^5.2.5",
+    "iconv-lite": "^0.7.0",
+    "node-cron": "^4.2.1",
+    "xmlbuilder2": "^3.1.1",
+    "yauzl": "^3.2.0"
+  }
+}
