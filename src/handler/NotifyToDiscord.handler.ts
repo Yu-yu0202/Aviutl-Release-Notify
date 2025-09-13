@@ -96,7 +96,7 @@ export class NotifyToDiscordHandler {
     );
     container.addTextDisplayComponents(
       new TextDisplayBuilder().setContent(
-        `-# AviUtl Release Notify v${pkg.version} by Yu-yu0202`,
+        `-# [AviUtl Release Notify v${pkg.version}](<https://discord.com/oauth2/authorize?client_id=1396775484091662387>) by Yu-yu0202`,
       ),
     );
 

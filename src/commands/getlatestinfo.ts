@@ -99,7 +99,7 @@ export class Getlatestinfo implements CommandMeta {
           "-# このツールの使用により生じた問題は、作者は一切責任を負いません。\n-# 正確な情報を確認してください。",
         ),
         new TextDisplayBuilder().setContent(
-          `-# AviUtl Release Notify v${pkg.version} by Yu-yu0202`,
+          `-# [AviUtl Release Notify v${pkg.version}](<https://discord.com/oauth2/authorize?client_id=1396775484091662387>) by Yu-yu0202`,
         ),
       );
 
