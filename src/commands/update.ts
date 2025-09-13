@@ -1,6 +1,6 @@
 import { type CommandMeta } from "botmanager";
 import { type ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
-import { WatchUpdateHandler } from "../handler/WatchUpdate.Handler.js";
+import { WatchUpdateHandler } from "../handler/WatchUpdate.handler.js";
 
 export class Update implements CommandMeta {
   public name: string = "update";
