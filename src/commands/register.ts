@@ -41,7 +41,6 @@ export class Register implements CommandMeta {
           .setColor("Green")
           .setTimestamp(),
       ],
-      flags: [MessageFlags.Ephemeral],
     });
     await DB.close();
   }
