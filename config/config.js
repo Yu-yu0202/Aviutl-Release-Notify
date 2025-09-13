@@ -17,7 +17,7 @@ export const config = {
       command_autoload: true,
       event_autoload: true,
       enable_admin_commands: true,
-      enable_dev_commands: true,
+      enable_dev_commands: false,
     },
   },
 };

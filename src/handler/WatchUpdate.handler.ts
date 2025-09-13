@@ -1,4 +1,5 @@
 import nodeCron from "node-cron";
+import { Logger } from "botmanager";
 import type { ScheduledTask } from "node-cron";
 import { RSSHandler } from "./RSS.handler.js";
 import * as fs from "fs";
@@ -20,7 +21,7 @@ export class WatchUpdateHandler extends NotifyToDiscordHandler {
   public async start(): Promise<void> {
     await this.manual_update();
     this.cron = nodeCron.schedule("0 */3 * * *", async () => {
-      console.info("[UpdateHandler] Scheduled update check running...");
+      Logger.log("[UpdateHandler] Scheduled update check running...", "info");
       const rss: string = await RSSHandler.createRSS(
         "https://spring-fragrance.mints.ne.jp/aviutl/",
       );
@@ -28,13 +29,13 @@ export class WatchUpdateHandler extends NotifyToDiscordHandler {
       if (res) {
         super.notify(rss);
       }
-      console.info("[UpdateHandler] Scheduled update check completed.");
+      Logger.log("[UpdateHandler] Scheduled update check completed.", "info");
     });
-    console.info("[UpdateHandler] UpdateHandler started");
+    Logger.log("[UpdateHandler] UpdateHandler started", "info");
   }
 
   public async manual_update(): Promise<void> {
-    console.info("[UpdateHandler] Manual update check running...");
+    Logger.log("[UpdateHandler] Manual update check running...", "info");
     const rss: string = await RSSHandler.createRSS(
       "https://spring-fragrance.mints.ne.jp/aviutl/",
     );
@@ -42,11 +43,11 @@ export class WatchUpdateHandler extends NotifyToDiscordHandler {
     if (res) {
       super.notify(rss);
     }
-    console.info("[UpdateHandler] Manual update check completed.");
+    Logger.log("[UpdateHandler] Manual update check completed.", "info");
   }
 
   private async update(rss: string): Promise<string | void> {
-    console.info("[UpdateHandler] Checking for updates...");
+    Logger.log("[UpdateHandler] Checking for updates...", "info");
     if (!fs.existsSync("data")) {
       fs.mkdirSync("data", { recursive: true });
     }
@@ -86,20 +87,21 @@ export class WatchUpdateHandler extends NotifyToDiscordHandler {
           "  </channel>",
           "</rss>",
         ].join("\n");
-        console.info("[UpdateHandler] Updates found:", diffArr.length);
-        console.info(
-          "[UpdateHandler] New items:",
-          diffArr.map((i: any) => i.title).join(", "),
+        Logger.log(`[UpdateHandler] Updates found: ${diffArr.length}`, "info");
+        Logger.log(
+          `[UpdateHandler] New items:
+          ${diffArr.map((i: any) => i.title).join(", ")}`,
+          "info",
         );
         return diffRss;
       }
     }
-    console.info("[UpdateHandler] No updates found");
+    Logger.log("[UpdateHandler] No updates found", "info");
     return undefined;
   }
 
   public stop(): void {
     this.cron?.stop();
-    console.info("[UpdateHandler] UpdateHandler stopped");
+    Logger.log("[UpdateHandler] UpdateHandler stopped", "info");
   }
 }
