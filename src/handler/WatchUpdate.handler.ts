@@ -4,12 +4,11 @@ import { RSSHandler } from "./RSS.handler.js";
 import * as fs from "fs";
 import { NotifyToDiscordHandler } from "./NotifyToDiscord.handler.js";
 import { XMLParser } from 'fast-xml-parser';
-import { Client } from "discord.js";
 
 export class WatchUpdateHandler extends NotifyToDiscordHandler {
     private cron: ScheduledTask | undefined;
-    constructor(client: Client, channelId: string) {
-        super(client, channelId);
+    constructor() {
+        super();
         if (!fs.existsSync("data")) {
             fs.mkdirSync("data", { recursive: true });
         }
@@ -19,7 +18,7 @@ export class WatchUpdateHandler extends NotifyToDiscordHandler {
     }
 
     public async start(): Promise<void> {
-        await this.manual_update()
+        await this.manual_update();
         this.cron = nodeCron.schedule("0 */3 * * *", async () => {
             console.info('[UpdateHandler] Scheduled update check running...');
             const rss: string = await RSSHandler.createRSS("https://spring-fragrance.mints.ne.jp/aviutl/");

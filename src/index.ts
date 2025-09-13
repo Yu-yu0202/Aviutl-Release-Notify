@@ -1,6 +1,6 @@
 import { BotManager, DatabaseManager, Logger } from "botmanager";
 import { WhatsNewUtil } from "./utils/whats-new.util.js";
-import { WatchUpdateHandler } from "./handler/WatchUpdate.handler.js";
+import { WatchUpdateHandler } from "./handler/WatchUpdate.Handler.js";
 import * as fs from "fs";
 
 await BotManager.start();
