@@ -20,7 +20,7 @@ export class WatchUpdateHandler extends NotifyToDiscordHandler {
 
   public async start(): Promise<void> {
     await this.manual_update();
-    this.cron = nodeCron.schedule("0 */3 * * *", async () => {
+    this.cron = nodeCron.schedule("0 */1 * * *", async () => {
       Logger.log("[UpdateHandler] Scheduled update check running...", "info");
       const rss: string = await RSSHandler.createRSS(
         "https://spring-fragrance.mints.ne.jp/aviutl/",

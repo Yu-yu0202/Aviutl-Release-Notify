@@ -1,4 +1,8 @@
-import { ChatInputCommandInteraction, MessageFlags } from "discord.js";
+import {
+  ChatInputCommandInteraction,
+  MessageFlags,
+  EmbedBuilder,
+} from "discord.js";
 import { type CommandMeta, DatabaseManager } from "botmanager";
 
 export class Register implements CommandMeta {
@@ -30,7 +34,13 @@ export class Register implements CommandMeta {
       channelId,
     ]);
     await interaction.reply({
-      content: `通知チャンネルを <#${channelId}> に設定しました。`,
+      embeds: [
+        new EmbedBuilder()
+          .setTitle("✅️ 設定しました")
+          .setDescription(`<#${channelId}> に通知を設定しました。`)
+          .setColor("Green")
+          .setTimestamp(),
+      ],
       flags: [MessageFlags.Ephemeral],
     });
     await DB.close();

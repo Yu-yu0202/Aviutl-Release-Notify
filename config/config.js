@@ -12,7 +12,6 @@ export const config = {
     db: {
       type: "sqlite",
       file: "data/bot.db",
-      database: "aviutl-release-notify",
     },
     feature: {
       command_autoload: true,

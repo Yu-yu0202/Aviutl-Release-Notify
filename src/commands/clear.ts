@@ -1,5 +1,9 @@
 import { CommandMeta, Logger } from "botmanager";
-import { ChatInputCommandInteraction, MessageFlags } from "discord.js";
+import {
+  ChatInputCommandInteraction,
+  MessageFlags,
+  EmbedBuilder,
+} from "discord.js";
 import * as fs from "fs";
 
 export class Clear implements CommandMeta {
@@ -20,6 +24,11 @@ export class Clear implements CommandMeta {
     } else {
       Logger.log("[UpdateHandler] No RSS data found to clear.", "warn");
     }
-    await interaction.editReply({ content: "rss/xmlデータをクリアしました。" });
+    const embed = new EmbedBuilder()
+      .setTitle("✅️ 完了")
+      .setDescription("RSSデータをクリアしました。")
+      .setColor("Green")
+      .setTimestamp();
+    await interaction.editReply({ embeds: [embed] });
   }
 }
