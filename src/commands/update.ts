@@ -6,7 +6,8 @@ export class Update implements CommandMeta {
   public name: string = "update";
   public description: string = "手動更新を行います";
   public type: "slash" = "slash";
-  public cooldown: number = 15 * 60;
+  public cooldown: number = 20 * 60;
+  public isglobalcooldown?: boolean = true;
 
   public async exec(interaction: ChatInputCommandInteraction) {
     await interaction.deferReply();
