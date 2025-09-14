@@ -1,7 +1,7 @@
 import { type Events, DatabaseManager } from "botmanager";
 
-export class ClientReady implements Events {
-  public name: string = "ClientReady";
+export class ClientReady implements Events<"clientReady"> {
+  public name: "clientReady" = "clientReady";
   public once: boolean = true;
 
   public async exec(): Promise<void> {

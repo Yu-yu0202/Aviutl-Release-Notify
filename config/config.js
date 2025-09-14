@@ -8,6 +8,7 @@ export const config = {
     log: {
       logLevel: "info",
       enable_console: true,
+      enable_file: true,
     },
     db: {
       type: "sqlite",
