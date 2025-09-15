@@ -2,6 +2,8 @@ import {
   ChatInputCommandInteraction,
   MessageFlags,
   EmbedBuilder,
+  PermissionFlagsBits,
+  ChannelType,
 } from "discord.js";
 import { type CommandMeta, DatabaseManager } from "botmanager";
 
@@ -20,10 +22,38 @@ export class Register implements CommandMeta {
 
   public async exec(interaction: ChatInputCommandInteraction) {
     if (!interaction.guild) return;
-    const channel = interaction.options.getChannel("対象チャンネル");
-    if (!channel || !("id" in channel)) {
+
+    if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)) {
       await interaction.reply({
-        content: "有効なチャンネルを指定してください。",
+        embeds: [
+          new EmbedBuilder()
+            .setTitle("❌️ エラー")
+            .setDescription(
+              `このコマンドを実行するには「サーバーを管理」権限が必要です。`,
+            )
+            .setColor("Green")
+            .setTimestamp(),
+        ],
+        flags: [MessageFlags.Ephemeral],
+      });
+      return;
+    }
+
+    const channel = interaction.options.getChannel("対象チャンネル");
+    if (
+      !channel ||
+      !("id" in channel) ||
+      channel.type !== ChannelType.GuildText ||
+      !("send" in channel)
+    ) {
+      await interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setTitle("❌️ エラー")
+            .setDescription(`有効なテキストチャンネルを指定してください。`)
+            .setColor("Green")
+            .setTimestamp(),
+        ],
         flags: [MessageFlags.Ephemeral],
       });
       return;

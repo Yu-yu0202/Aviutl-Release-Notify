@@ -9,7 +9,7 @@ export const config = {
       logLevel: "info",
       enable_console: true,
       enable_file: true,
-      file_path: "data/bot.log"
+      file_path: "data/bot.log",
     },
     db: {
       type: "sqlite",
