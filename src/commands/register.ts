@@ -5,7 +5,7 @@ import {
   PermissionFlagsBits,
   ChannelType,
 } from "discord.js";
-import { type CommandMeta, DatabaseManager } from "botmanager";
+import { type CommandMeta, Config, DatabaseManager } from "botmanager";
 
 export class Register implements CommandMeta {
   public name: string = "register";
@@ -23,7 +23,10 @@ export class Register implements CommandMeta {
   public async exec(interaction: ChatInputCommandInteraction) {
     if (!interaction.guild) return;
 
-    if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)) {
+    if (
+      !interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild) ||
+      !Config.get().options.adminuserid.includes(interaction.user.id)
+    ) {
       await interaction.reply({
         embeds: [
           new EmbedBuilder()
