@@ -24,8 +24,10 @@ export class Register implements CommandMeta {
     if (!interaction.guild) return;
 
     if (
-      !interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild) ||
-      !Config.get().options.adminuserid.includes(interaction.user.id)
+      !(
+        interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild) ||
+        Config.get().options.adminuserid.includes(interaction.user.id)
+      )
     ) {
       await interaction.reply({
         embeds: [
