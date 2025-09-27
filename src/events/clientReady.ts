@@ -9,7 +9,7 @@ export class ClientReady implements Events<"clientReady"> {
       .queue(
         "CREATE TABLE IF NOT EXISTS channelIds (channelId TEXT PRIMARY KEY)",
       )
-      .then((db) => db.commit())
-      .then((db) => db.close());
+      .then((DB) => DB.commit())
+      .then((DB) => DB.close());
   }
 }

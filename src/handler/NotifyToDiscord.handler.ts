@@ -39,7 +39,7 @@ export class NotifyToDiscordHandler {
       setup: `https://spring-fragrance.mints.ne.jp/aviutl/AviUtl2${String(title[2]).toLowerCase()}_setup.exe`,
       zip: `https://spring-fragrance.mints.ne.jp/aviutl/aviutl2${String(title[2]).toLowerCase()}.zip`,
     };
-    const whatsNew: string = await WhatsNewUtil.getWhatsNew(
+    const whatsNewResult = await WhatsNewUtil.getWhatsNew(
       downloadLink.zip,
       title[2].toLowerCase(),
     );
@@ -54,8 +54,17 @@ export class NotifyToDiscordHandler {
       new TextDisplayBuilder().setContent("更新点(AviUtl2.txtから抜粋):"),
     );
     container.addTextDisplayComponents(
-      new TextDisplayBuilder().setContent(`\`\`\`txt\n${whatsNew}\n\`\`\``),
+      new TextDisplayBuilder().setContent(`\`\`\`txt\n${whatsNewResult.AviUtl2}\n\`\`\``),
     );
+    
+    if (whatsNewResult.Lua && whatsNewResult.Lua.trim() !== "") {
+      container.addTextDisplayComponents(
+        new TextDisplayBuilder().setContent("更新点(Lua.txtから抜粋):"),
+      );
+      container.addTextDisplayComponents(
+        new TextDisplayBuilder().setContent(`\`\`\`txt\n${whatsNewResult.Lua}\n\`\`\``),
+      );
+    }
     container.addSeparatorComponents(
       new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large),
     );

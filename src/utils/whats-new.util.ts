@@ -4,31 +4,20 @@ import * as yauzl from "yauzl";
 import * as path from "path";
 
 export class WhatsNewUtil {
-  static async init() {
+  private static async init() {
     if (!fs.existsSync("./data/tmp")) {
       fs.mkdirSync("./data/tmp", { recursive: true });
     }
   }
 
-  static async getWhatsNew(
-    url: string,
+  private static async getUtl2(
     version: string | undefined,
   ): Promise<string> {
-    await this.init();
-
-    await execa("curl", ["-OL", url], { cwd: "./data/tmp" });
-    await this.extractZip(
-      `./data/tmp/aviutl2${version}.zip`,
-      `./data/tmp/aviutl2${version}`,
-    );
-
-    const txt = fs.readFileSync(
+    const aviutl2_txt = fs.readFileSync(
       `./data/tmp/aviutl2${version}/aviutl2.txt`,
       "utf-8",
     );
-    fs.unlinkSync(`./data/tmp/aviutl2${version}.zip`);
-    fs.rmSync(`./data/tmp/aviutl2${version}`, { recursive: true, force: true });
-    const lines = txt.replace(/\r\n/g, "\n").split("\n");
+    const lines = aviutl2_txt.replace(/\r\n/g, "\n").split("\n");
 
     const pattern = new RegExp(
       `^\\[\\d{4}/\\d{1,2}/\\d{1,2}\\]\\s+ver\\s+2\\.?\\d*\\s+${version}$`,
@@ -42,11 +31,51 @@ export class WhatsNewUtil {
 
     const resultLines = lines.slice(lineNum).map((line) => line.trim());
 
+    return resultLines.join("\n");
+  }
+
+  private static async getLua(
+    version: string | undefined,
+  ): Promise<string> {
+    const lua_txt = fs.readFileSync(
+      `./data/tmp/lua${version}/lua.txt`,
+      "utf-8",
+    );
+    const lines = lua_txt.replace(/\r\n/g, "\n").split("\n");
+
+    const pattern = new RegExp(
+      `^\\[\\d{4}/\\d{1,2}/\\d{1,2}\\]`,
+      "i",
+    );
+    const lineNum = lines.findIndex((line) => pattern.test(line.trim()));
+
+    if (lineNum === -1) {
+      return `バージョン ${version} の情報が見つかりませんでした。`;
+    }
+
+    const resultLines = lines.slice(lineNum).map((line) => line.trim());
+
+    return resultLines.join("\n");
+  }
+
+  public static async getWhatsNew(url: string, version: string | undefined,) : Promise<{AviUtl2: string, Lua: string}> {
+    await this.init();
+
+    await execa("curl", ["-OL", url], { cwd: "./data/tmp" });
+    await this.extractZip(
+      `./data/tmp/aviutl2${version}.zip`,
+      `./data/tmp/aviutl2${version}`,
+    );
+
+    const aviutl2Result = await this.getUtl2(version);
+    const luaResult = await this.getLua(version);
+
     const latest = {
       version: version,
       date:
-        resultLines[0].match(/\[(\d{4}\/\d{1,2}\/\d{1,2})\]/)?.[1] || "不明",
-      info: resultLines.join("\n"),
+        aviutl2Result.split("\n")[0].match(/\[(\d{4}\/\d{1,2}\/\d{1,2})\]/)?.[1] || "不明",
+      aviutl2: aviutl2Result,
+      lua: luaResult,
     };
 
     if (!fs.existsSync("./data")) {
@@ -55,13 +84,20 @@ export class WhatsNewUtil {
 
     fs.writeFileSync("./data/latest.json", JSON.stringify(latest, null, 2));
 
-    return resultLines.join("\n");
+    fs.unlinkSync(`./data/tmp/aviutl2${version}.zip`);
+    fs.rmSync(`./data/tmp/aviutl2${version}`, { recursive: true, force: true });
+
+    return {
+      AviUtl2: aviutl2Result,
+      Lua: luaResult,
+    };
   }
 
-  static async getFromFile(): Promise<{
+  public static async getFromFile(): Promise<{
     version: string;
     date: string;
-    info: string;
+    aviutl2: string;
+    lua: string;
   }> {
     return new Promise((resolve, reject) => {
       if (!fs.existsSync("./data/latest.json")) {
@@ -72,7 +108,8 @@ export class WhatsNewUtil {
       resolve({
         version: latest.version,
         date: latest.date,
-        info: latest.info,
+        aviutl2: latest.aviutl2,
+        lua: latest.lua,
       });
     });
   }

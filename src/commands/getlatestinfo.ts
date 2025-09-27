@@ -20,7 +20,7 @@ export class Getlatestinfo implements CommandMeta {
   public type: "slash" = "slash";
 
   public async exec(interaction: ChatInputCommandInteraction): Promise<void> {
-    let latestinfo: { version: string; date: string; info: string };
+    let latestinfo: { version: string; date: string; aviutl2: string; lua: string };
     try {
       latestinfo = await WhatsNewUtil.getFromFile();
     } catch (e: unknown) {
@@ -60,9 +60,19 @@ export class Getlatestinfo implements CommandMeta {
           `### AviUtl2 ${latestinfo.version} - ${latestinfo.date} の情報`,
         ),
         new TextDisplayBuilder().setContent(
-          `バージョン: ${latestinfo.version}\nリリース日: ${latestinfo.date}\n更新情報: \`\`\`txt\n${latestinfo.info}\n\`\`\``,
+          `バージョン: ${latestinfo.version}\nリリース日: ${latestinfo.date}\n更新情報(AviUtl2): \`\`\`txt\n${latestinfo.aviutl2}\n\`\`\``,
         ),
-      )
+      );
+    
+    if (latestinfo.lua && latestinfo.lua.trim() !== "") {
+      components.addTextDisplayComponents(
+        new TextDisplayBuilder().setContent(
+          `更新情報(Lua): \`\`\`txt\n${latestinfo.lua}\n\`\`\``,
+        ),
+      );
+    }
+    
+    components
       .addSectionComponents(
         new SectionBuilder()
           .addTextDisplayComponents(
