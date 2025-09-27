@@ -54,15 +54,19 @@ export class NotifyToDiscordHandler {
       new TextDisplayBuilder().setContent("更新点(AviUtl2.txtから抜粋):"),
     );
     container.addTextDisplayComponents(
-      new TextDisplayBuilder().setContent(`\`\`\`txt\n${whatsNewResult.AviUtl2}\n\`\`\``),
+      new TextDisplayBuilder().setContent(
+        `\`\`\`txt\n${whatsNewResult.AviUtl2}\n\`\`\``,
+      ),
     );
-    
+
     if (whatsNewResult.Lua && whatsNewResult.Lua.trim() !== "") {
       container.addTextDisplayComponents(
         new TextDisplayBuilder().setContent("更新点(Lua.txtから抜粋):"),
       );
       container.addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(`\`\`\`txt\n${whatsNewResult.Lua}\n\`\`\``),
+        new TextDisplayBuilder().setContent(
+          `\`\`\`txt\n${whatsNewResult.Lua}\n\`\`\``,
+        ),
       );
     }
     container.addSeparatorComponents(

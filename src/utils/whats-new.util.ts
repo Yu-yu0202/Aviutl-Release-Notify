@@ -4,15 +4,13 @@ import * as yauzl from "yauzl";
 import * as path from "path";
 
 export class WhatsNewUtil {
-  private static async init() {
+  public static async init() {
     if (!fs.existsSync("./data/tmp")) {
       fs.mkdirSync("./data/tmp", { recursive: true });
     }
   }
 
-  private static async getUtl2(
-    version: string | undefined,
-  ): Promise<string> {
+  private static async getUtl2(version: string | undefined): Promise<string> {
     const aviutl2_txt = fs.readFileSync(
       `./data/tmp/aviutl2${version}/aviutl2.txt`,
       "utf-8",
@@ -34,19 +32,14 @@ export class WhatsNewUtil {
     return resultLines.join("\n");
   }
 
-  private static async getLua(
-    version: string | undefined,
-  ): Promise<string> {
+  private static async getLua(version: string | undefined): Promise<string> {
     const lua_txt = fs.readFileSync(
       `./data/tmp/lua${version}/lua.txt`,
       "utf-8",
     );
     const lines = lua_txt.replace(/\r\n/g, "\n").split("\n");
 
-    const pattern = new RegExp(
-      `^\\[\\d{4}/\\d{1,2}/\\d{1,2}\\]`,
-      "i",
-    );
+    const pattern = new RegExp(`^\\[\\d{4}/\\d{1,2}/\\d{1,2}\\]`, "i");
     const lineNum = lines.findIndex((line) => pattern.test(line.trim()));
 
     if (lineNum === -1) {
@@ -58,7 +51,10 @@ export class WhatsNewUtil {
     return resultLines.join("\n");
   }
 
-  public static async getWhatsNew(url: string, version: string | undefined,) : Promise<{AviUtl2: string, Lua: string}> {
+  public static async getWhatsNew(
+    url: string,
+    version: string | undefined,
+  ): Promise<{ AviUtl2: string; Lua: string }> {
     await this.init();
 
     await execa("curl", ["-OL", url], { cwd: "./data/tmp" });
@@ -73,7 +69,9 @@ export class WhatsNewUtil {
     const latest = {
       version: version,
       date:
-        aviutl2Result.split("\n")[0].match(/\[(\d{4}\/\d{1,2}\/\d{1,2})\]/)?.[1] || "不明",
+        aviutl2Result
+          .split("\n")[0]
+          .match(/\[(\d{4}\/\d{1,2}\/\d{1,2})\]/)?.[1] || "不明",
       aviutl2: aviutl2Result,
       lua: luaResult,
     };

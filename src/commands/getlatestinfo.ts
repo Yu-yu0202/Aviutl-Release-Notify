@@ -20,7 +20,12 @@ export class Getlatestinfo implements CommandMeta {
   public type: "slash" = "slash";
 
   public async exec(interaction: ChatInputCommandInteraction): Promise<void> {
-    let latestinfo: { version: string; date: string; aviutl2: string; lua: string };
+    let latestinfo: {
+      version: string;
+      date: string;
+      aviutl2: string;
+      lua: string;
+    };
     try {
       latestinfo = await WhatsNewUtil.getFromFile();
     } catch (e: unknown) {
@@ -54,16 +59,15 @@ export class Getlatestinfo implements CommandMeta {
       }
       return;
     }
-    const components = new ContainerBuilder()
-      .addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(
-          `### AviUtl2 ${latestinfo.version} - ${latestinfo.date} の情報`,
-        ),
-        new TextDisplayBuilder().setContent(
-          `バージョン: ${latestinfo.version}\nリリース日: ${latestinfo.date}\n更新情報(AviUtl2): \`\`\`txt\n${latestinfo.aviutl2}\n\`\`\``,
-        ),
-      );
-    
+    const components = new ContainerBuilder().addTextDisplayComponents(
+      new TextDisplayBuilder().setContent(
+        `### AviUtl2 ${latestinfo.version} - ${latestinfo.date} の情報`,
+      ),
+      new TextDisplayBuilder().setContent(
+        `バージョン: ${latestinfo.version}\nリリース日: ${latestinfo.date}\n更新情報(AviUtl2): \`\`\`txt\n${latestinfo.aviutl2}\n\`\`\``,
+      ),
+    );
+
     if (latestinfo.lua && latestinfo.lua.trim() !== "") {
       components.addTextDisplayComponents(
         new TextDisplayBuilder().setContent(
@@ -71,7 +75,7 @@ export class Getlatestinfo implements CommandMeta {
         ),
       );
     }
-    
+
     components
       .addSectionComponents(
         new SectionBuilder()
