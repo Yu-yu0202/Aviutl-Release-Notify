@@ -33,7 +33,7 @@ export class WhatsNewUtil {
   }
 
   private static async getLua(version: string | undefined): Promise<string> {
-    const lua_txt = fs.readFileSync(
+    /*const lua_txt = fs.readFileSync(
       `./data/tmp/aviutl2${version}/lua.txt`,
       "utf-8",
     );
@@ -48,7 +48,8 @@ export class WhatsNewUtil {
 
     const resultLines = lines.slice(lineNum).map((line) => line.trim());
 
-    return resultLines.join("\n");
+    return resultLines.join("\n");*/
+    return "";
   }
 
   public static async getWhatsNew(
