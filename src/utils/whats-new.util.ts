@@ -33,7 +33,7 @@ export class WhatsNewUtil {
   }
 
   private static async getLua(version: string | undefined): Promise<string> {
-    /*const lua_txt = fs.readFileSync(
+    const lua_txt = fs.readFileSync(
       `./data/tmp/aviutl2${version}/lua.txt`,
       "utf-8",
     );
@@ -41,15 +41,22 @@ export class WhatsNewUtil {
 
     const pattern = new RegExp(`^\\[\\d{4}/\\d{1,2}/\\d{1,2}\\]`, "i");
     const lineNum = lines.findIndex((line) => pattern.test(line.trim()));
+    const endLineNum =
+      lines.slice(lineNum + 1).findIndex((line) => /^\s*$/.test(line)) !== -1
+        ? lineNum +
+          1 +
+          lines.slice(lineNum + 1).findIndex((line) => /^\s*$/.test(line))
+        : lines.length;
 
     if (lineNum === -1) {
       return `バージョン ${version} の情報が見つかりませんでした。`;
     }
 
-    const resultLines = lines.slice(lineNum).map((line) => line.trim());
+    const resultLines = lines
+      .slice(lineNum, endLineNum)
+      .map((line) => line.trim());
 
-    return resultLines.join("\n");*/
-    return "";
+    return resultLines.join("\n");
   }
 
   public static async getWhatsNew(
