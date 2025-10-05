@@ -34,7 +34,7 @@ export class WhatsNewUtil {
 
   private static async getLua(version: string | undefined): Promise<string> {
     const lua_txt = fs.readFileSync(
-      `./data/tmp/lua${version}/lua.txt`,
+      `./data/tmp/aviutl2${version}/lua.txt`,
       "utf-8",
     );
     const lines = lua_txt.replace(/\r\n/g, "\n").split("\n");
