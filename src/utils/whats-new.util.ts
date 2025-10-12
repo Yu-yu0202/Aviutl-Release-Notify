@@ -40,11 +40,8 @@ export class WhatsNewUtil {
     const lines = lua_txt.replace(/\r\n/g, "\n").split("\n");
 
     const today = new Date();
-    const todayStr = today.toISOString().split('T')[0].replace(/-/g, '/');
-    const pattern = new RegExp(
-      `^\\[${todayStr}\\]\\s+ver\\s+2\\.?\\d*\\s+${version}`,
-      "i",
-    );
+    const todayStr = today.toISOString().split("T")[0].replace(/-/g, "/");
+    const pattern = new RegExp(`^\\[${todayStr}\\]\\`, "i");
     const lineNum = lines.findIndex((line) => pattern.test(line.trim()));
     const endLineNum =
       lines.slice(lineNum + 1).findIndex((line) => /^\s*$/.test(line)) !== -1
