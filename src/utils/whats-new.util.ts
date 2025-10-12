@@ -39,7 +39,10 @@ export class WhatsNewUtil {
     );
     const lines = lua_txt.replace(/\r\n/g, "\n").split("\n");
 
-    const pattern = new RegExp(`^\\[\\d{4}/\\d{1,2}/\\d{1,2}\\]`, "i");
+    const pattern = new RegExp(
+      `^\\[\\d{4}/\\d{1,2}/\\d{1,2}\\]\\s+ver\\s+2\\.?\\d*\\s+${version}`,
+      "i",
+    );
     const lineNum = lines.findIndex((line) => pattern.test(line.trim()));
     const endLineNum =
       lines.slice(lineNum + 1).findIndex((line) => /^\s*$/.test(line)) !== -1
