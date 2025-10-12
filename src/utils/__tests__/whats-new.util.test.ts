@@ -42,7 +42,7 @@ describe("WhatsNewUtil", () => {
       const version = "beta14";
       const testDir = `./data/tmp/aviutl2${version}`;
       const testFile = `${testDir}/aviutl2.txt`;
-      
+
       if (!fs.existsSync(testDir)) {
         fs.mkdirSync(testDir, { recursive: true });
       }
@@ -58,7 +58,7 @@ describe("WhatsNewUtil", () => {
       const version = "nonexistent";
       const testDir = `./data/tmp/aviutl2${version}`;
       const testFile = `${testDir}/aviutl2.txt`;
-      
+
       if (!fs.existsSync(testDir)) {
         fs.mkdirSync(testDir, { recursive: true });
       }
@@ -66,7 +66,9 @@ describe("WhatsNewUtil", () => {
 
       const result = await (WhatsNewUtil as any).getUtl2(version);
 
-      expect(result).toBe("バージョン nonexistent の情報が見つかりませんでした。");
+      expect(result).toBe(
+        "バージョン nonexistent の情報が見つかりませんでした。",
+      );
     });
 
     afterEach(() => {
@@ -74,7 +76,10 @@ describe("WhatsNewUtil", () => {
         fs.rmSync("./data/tmp/aviutl2beta14", { recursive: true, force: true });
       }
       if (fs.existsSync("./data/tmp/aviutl2nonexistent")) {
-        fs.rmSync("./data/tmp/aviutl2nonexistent", { recursive: true, force: true });
+        fs.rmSync("./data/tmp/aviutl2nonexistent", {
+          recursive: true,
+          force: true,
+        });
       }
     });
   });
@@ -84,7 +89,7 @@ describe("WhatsNewUtil", () => {
       const version = "beta14";
       const testDir = `./data/tmp/aviutl2${version}`;
       const testFile = `${testDir}/lua.txt`;
-      
+
       if (!fs.existsSync(testDir)) {
         fs.mkdirSync(testDir, { recursive: true });
       }
@@ -100,7 +105,7 @@ describe("WhatsNewUtil", () => {
       const version = "beta14";
       const testDir = `./data/tmp/aviutl2${version}`;
       const testFile = `${testDir}/lua.txt`;
-      
+
       if (!fs.existsSync(testDir)) {
         fs.mkdirSync(testDir, { recursive: true });
       }
@@ -115,7 +120,7 @@ describe("WhatsNewUtil", () => {
       const version = "beta14";
       const testDir = `./data/tmp/aviutl2${version}`;
       const testFile = `${testDir}/lua.txt`;
-      
+
       if (!fs.existsSync(testDir)) {
         fs.mkdirSync(testDir, { recursive: true });
       }

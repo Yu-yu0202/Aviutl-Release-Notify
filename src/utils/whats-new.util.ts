@@ -39,8 +39,10 @@ export class WhatsNewUtil {
     );
     const lines = lua_txt.replace(/\r\n/g, "\n").split("\n");
 
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0].replace(/-/g, '/');
     const pattern = new RegExp(
-      `^\\[\\d{4}/\\d{1,2}/\\d{1,2}\\]\\s+ver\\s+2\\.?\\d*\\s+${version}`,
+      `^\\[${todayStr}\\]\\s+ver\\s+2\\.?\\d*\\s+${version}`,
       "i",
     );
     const lineNum = lines.findIndex((line) => pattern.test(line.trim()));
