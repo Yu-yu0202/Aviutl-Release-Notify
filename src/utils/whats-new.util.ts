@@ -41,7 +41,7 @@ export class WhatsNewUtil {
 
     const today = new Date();
     const todayStr = today.toISOString().split("T")[0].replace(/-/g, "/");
-    const pattern = new RegExp(`^\\[${todayStr}\\]\\`, "i");
+    const pattern = new RegExp(`^\\[${todayStr}\\]`, "i");
     const lineNum = lines.findIndex((line) => pattern.test(line.trim()));
     const endLineNum =
       lines.slice(lineNum + 1).findIndex((line) => /^\s*$/.test(line)) !== -1
