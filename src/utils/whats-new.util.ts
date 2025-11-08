@@ -32,15 +32,20 @@ export class WhatsNewUtil {
     return resultLines.join("\n");
   }
 
-  private static async getLua(version: string | undefined): Promise<string> {
+  public static async getLua(
+    version: string | undefined,
+    date?: Date,
+  ): Promise<string> {
     const lua_txt = fs.readFileSync(
       `./data/tmp/aviutl2${version}/lua.txt`,
       "utf-8",
     );
     const lines = lua_txt.replace(/\r\n/g, "\n").split("\n");
 
-    const today = new Date();
-    const todayStr = today.toISOString().split("T")[0].replace(/-/g, "/");
+    const targetDate = date || new Date();
+    const todayStr = `${targetDate.getFullYear()}/${
+      targetDate.getMonth() + 1
+    }/${targetDate.getDate()}`;
     const pattern = new RegExp(`^\\[${todayStr}\\]`, "i");
     const lineNum = lines.findIndex((line) => pattern.test(line.trim()));
     const endLineNum =
