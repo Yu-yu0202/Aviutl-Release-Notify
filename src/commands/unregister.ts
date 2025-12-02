@@ -23,7 +23,7 @@ export class Unregister implements CommandMeta {
     if (!interaction.guild) return;
     if (
       !interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild) ||
-      !Config.get().options.adminuserid.includes(interaction.user.id)
+      !Config.get().options?.adminuserid?.includes(interaction.user.id)
     ) {
       await interaction.reply({
         embeds: [
