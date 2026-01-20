@@ -1,34 +1,84 @@
-import { CommandMeta, Logger } from "botmanager";
 import {
-  ChatInputCommandInteraction,
-  MessageFlags,
+  type ChatInputCommandInteraction,
   EmbedBuilder,
+  MessageFlags,
 } from "discord.js";
-import * as fs from "fs";
-
-export class Clear implements CommandMeta {
+import { SlashCommandT } from "diskernel";
+import { ReleaseInfo } from "../utils/releaseInfo.js";
+export class Clear extends SlashCommandT {
   public name: string = "clear";
-  public description: string = "rssデータをクリアします [AdminOnly]";
-  public type: "slash" = "slash";
-  public adminOnly: boolean = true;
+  public description: string = "リリース情報をクリアします [管理者のみ]";
+  public isAdminOnly: boolean = true;
+  public option = [
+    {
+      name: "type",
+      description: "クリアするデータのタイプ",
+      type: "string" as const,
+      choices: [
+        {
+          name: "AviUtl2",
+          value: "aviutl2",
+        },
+        {
+          name: "SDK",
+          value: "sdk",
+        },
+        {
+          name: "すべて",
+          value: "all",
+        },
+      ],
+      required: true,
+    },
+  ];
 
-  public async exec(interaction: ChatInputCommandInteraction): Promise<void> {
-    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-    Logger.log(
-      "[UpdateHandler] Clear command executed, clearing RSS data...",
-      "info",
-    );
-    if (fs.existsSync("data/rss/aviutl.xml")) {
-      fs.unlinkSync("data/rss/aviutl.xml");
-      Logger.log("[UpdateHandler] RSS data cleared successfully.", "info");
-    } else {
-      Logger.log("[UpdateHandler] No RSS data found to clear.", "warn");
+  public async execute(
+    interaction: ChatInputCommandInteraction,
+  ): Promise<void> {
+    const type = interaction.options.get("type", true);
+    if (
+      !type.value ||
+      !["aviutl2", "sdk", "all"].includes(type.value?.toString() ?? "")
+    ) {
+      await interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setTitle("❌️ エラー")
+            .setDescription(
+              "`type`に有効な値を指定してください。`aviutl2` または `sdk` または `all` を想定していました。",
+            )
+            .setColor("Red")
+            .setTimestamp(),
+        ],
+        flags: [MessageFlags.Ephemeral],
+      });
+      return;
     }
-    const embed = new EmbedBuilder()
-      .setTitle("✅️ 完了")
-      .setDescription("RSSデータをクリアしました。")
-      .setColor("Green")
-      .setTimestamp();
-    await interaction.editReply({ embeds: [embed] });
+    await interaction.deferReply({
+      flags: [MessageFlags.Ephemeral],
+    });
+
+    switch (type.value) {
+      case "aviutl2":
+        await ReleaseInfo.deleteAviUtl2ReleaseData();
+        break;
+      case "sdk":
+        await ReleaseInfo.deleteSDKReleaseData();
+        break;
+      case "all":
+        await ReleaseInfo.deleteAviUtl2ReleaseData();
+        await ReleaseInfo.deleteSDKReleaseData();
+        break;
+    }
+
+    await interaction.editReply({
+      embeds: [
+        new EmbedBuilder()
+          .setTitle("✅️ 完了")
+          .setDescription("リリース情報をクリアしました。")
+          .setColor("Green")
+          .setTimestamp(),
+      ],
+    });
   }
 }
