@@ -52,6 +52,7 @@ export class Clear extends SlashCommandT {
         ],
         flags: [MessageFlags.Ephemeral],
       });
+      return;
     }
     await interaction.deferReply({
       flags: [MessageFlags.Ephemeral],

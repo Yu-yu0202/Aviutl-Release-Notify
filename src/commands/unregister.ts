@@ -55,7 +55,7 @@ export class Unregister extends SlashCommandT {
           new EmbedBuilder()
             .setTitle("❌️ エラー")
             .setDescription(`そのチャンネルは登録されていません。`)
-            .setColor("Green")
+            .setColor("Red")
             .setTimestamp(),
         ],
       });

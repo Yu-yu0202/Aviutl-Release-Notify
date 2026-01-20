@@ -66,6 +66,7 @@ export class GetLatestInfo extends SlashCommandT {
         ],
         flags: [MessageFlags.Ephemeral],
       });
+      return;
     }
 
     await interaction.deferReply();

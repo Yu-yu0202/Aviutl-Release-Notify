@@ -76,9 +76,9 @@ export class ReleaseInfo {
         .slice(1)
         .findIndex((line) => line.startsWith(lineFirstCharacter)) !== -1
         ? 1 +
-          resultLines
-            .slice(1)
-            .findIndex((line) => line.startsWith(lineFirstCharacter))
+        resultLines
+          .slice(1)
+          .findIndex((line) => line.startsWith(lineFirstCharacter))
         : resultLines.length;
 
     return resultLines.slice(0, endLineNum).join("\n");
@@ -442,7 +442,7 @@ export class ReleaseInfo {
     try {
       await Aviutl2Release.deleteMany({});
     } catch (e: any) {
-      logger.warn("Error deleting release info: ${m}", {
+      logger.warn("Error deleting release info: {m}", {
         m: e instanceof Error ? e.message : e.toString(),
       });
     }
@@ -452,7 +452,7 @@ export class ReleaseInfo {
     try {
       await SdkRelease.deleteMany({});
     } catch (e: any) {
-      logger.warn("Error deleting release info: ${m}", {
+      logger.warn("Error deleting release info: {m}", {
         m: e instanceof Error ? e.message : e.toString(),
       });
     }
