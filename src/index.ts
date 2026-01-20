@@ -1,26 +1,9 @@
-import { BotManager, DatabaseManager, Logger } from "botmanager";
-import { WhatsNewUtil } from "./utils/whats-new.util.js";
-import { WatchUpdateHandler } from "./handler/WatchUpdate.handler.js";
-import * as fs from "fs";
+import { Config, Core } from "diskernel";
+import { config } from "./config.js";
+import { Database } from "./database/connectionManager.js";
 
-await BotManager.start();
+new Config(config);
 
-if (!fs.existsSync("data")) {
-  fs.mkdirSync("data", { recursive: true });
-}
-const DB = new DatabaseManager();
-await DB.run(
-  "CREATE TABLE IF NOT EXISTS channelIds (channelId TEXT PRIMARY KEY)",
-);
-await DB.close();
+await Database.ensureConnected();
 
-await WhatsNewUtil.init();
-
-const WUHandler = new WatchUpdateHandler();
-await WUHandler.start();
-
-process.on("SIGINT", () => {
-  WUHandler.stop();
-  Logger.log("✅️ SIGINT received. Stopping...");
-  process.exit(0);
-});
+await Core.start();

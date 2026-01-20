@@ -1,15 +1,16 @@
 import {
-  ChatInputCommandInteraction,
   MessageFlags,
   EmbedBuilder,
   PermissionFlagsBits,
+  type ChatInputCommandInteraction,
 } from "discord.js";
-import { type CommandMeta, Config, DatabaseManager, Logger } from "botmanager";
+import { SlashCommandT, Config } from "diskernel";
+import { Registration } from "../database/schema/registration.js";
 
-export class Unregister implements CommandMeta {
+export class Unregister extends SlashCommandT {
   public name: string = "unregister";
-  public description: string = "通知を停止します";
-  public options = [
+  public description: string = "通知の設定を解除します";
+  public option = [
     {
       name: "対象チャンネル",
       description: "通知を停止するチャンネル",
@@ -17,61 +18,39 @@ export class Unregister implements CommandMeta {
       required: true,
     },
   ];
-  public type: "slash" = "slash";
 
-  public async exec(interaction: ChatInputCommandInteraction) {
-    if (!interaction.guild) return;
+  public async execute(
+    interaction: ChatInputCommandInteraction,
+  ): Promise<void> {
     if (
-      !interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild) ||
-      !Config.get().options?.adminuserid?.includes(interaction.user.id)
+      !(
+        interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild) ||
+        Config.get("options").adminIds?.includes(interaction.user.id)
+      )
     ) {
       await interaction.reply({
         embeds: [
           new EmbedBuilder()
             .setTitle("❌️ エラー")
             .setDescription(
-              `このコマンドを実行するには「サーバーを管理」権限が必要です。`,
+              "このコマンドを実行するには「サーバーを管理」権限が必要です。",
             )
-            .setColor("Green")
+            .setColor("Red")
             .setTimestamp(),
         ],
         flags: [MessageFlags.Ephemeral],
       });
       return;
     }
-    const channel = interaction.options.getChannel("対象チャンネル")!;
-    const DB = new DatabaseManager();
-    if (
-      await DB.get("SELECT channelId FROM channelIds WHERE channelId = ?", [
-        channel.id,
-      ])
-    ) {
-      await DB.queue("DELETE FROM channelIds WHERE channelId = ?", [
-        channel.id,
-      ]);
+    await interaction.deferReply({
+      flags: [MessageFlags.Ephemeral],
+    });
 
-      try {
-        await DB.commit();
-      } catch (e: unknown) {
-        await interaction.reply({
-          embeds: [
-            new EmbedBuilder()
-              .setTitle("❌️ エラー")
-              .setDescription(`不明なエラーが発生しました`)
-              .setColor("Green")
-              .setTimestamp(),
-          ],
-          flags: [MessageFlags.Ephemeral],
-        });
-        Logger.log(
-          `Error in processing unregister command: ${(e as Error).message}`,
-          "warn",
-        );
-        DB.close();
-        return;
-      }
-    } else {
-      await interaction.reply({
+    const channel = interaction.options.getChannel("対象チャンネル", true);
+    const result = await Registration.deleteOne({ _id: channel.id });
+
+    if (result.deletedCount === 0) {
+      await interaction.editReply({
         embeds: [
           new EmbedBuilder()
             .setTitle("❌️ エラー")
@@ -79,15 +58,14 @@ export class Unregister implements CommandMeta {
             .setColor("Green")
             .setTimestamp(),
         ],
-        flags: [MessageFlags.Ephemeral],
       });
+      return;
     }
-    DB.close();
 
-    await interaction.reply({
+    await interaction.editReply({
       embeds: [
         new EmbedBuilder()
-          .setTitle("✅️ 停止しました")
+          .setTitle("✅️ 完了")
           .setDescription(`<#${channel.id}> への通知を停止しました。`)
           .setColor("Green")
           .setTimestamp(),

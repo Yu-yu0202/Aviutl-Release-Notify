@@ -1,13 +1,13 @@
-import { EmbedBuilder } from "discord.js";
-import type { CommandMeta } from "botmanager";
-import type { ChatInputCommandInteraction } from "discord.js";
+import { EmbedBuilder, type ChatInputCommandInteraction } from "discord.js";
+import { SlashCommandT } from "diskernel";
 
-export class Ping implements CommandMeta {
+export class Ping extends SlashCommandT {
   public name: string = "ping";
   public description: string = "Pingを表示します";
-  public type: "slash" = "slash";
 
-  public async exec(interaction: ChatInputCommandInteraction): Promise<void> {
+  public async execute(
+    interaction: ChatInputCommandInteraction,
+  ): Promise<void> {
     const embed: EmbedBuilder = new EmbedBuilder()
       .setTitle("🏓 Pong!")
       .setDescription(`Ping: ${Math.round(interaction.client.ws.ping)}`)
