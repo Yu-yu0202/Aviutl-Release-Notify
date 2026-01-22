@@ -76,9 +76,9 @@ export class ReleaseInfo {
         .slice(1)
         .findIndex((line) => line.startsWith(lineFirstCharacter)) !== -1
         ? 1 +
-        resultLines
-          .slice(1)
-          .findIndex((line) => line.startsWith(lineFirstCharacter))
+          resultLines
+            .slice(1)
+            .findIndex((line) => line.startsWith(lineFirstCharacter))
         : resultLines.length;
 
     return resultLines.slice(0, endLineNum).join("\n");
