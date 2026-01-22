@@ -18,29 +18,29 @@
     "@eslint/js": "^9.39.2",
     "@jest/globals": "^30.2.0",
     "@types/jest": "^30.0.0",
-    "@types/node": "^25.0.5",
+    "@types/node": "^25.0.10",
     "@types/yauzl": "^2.10.3",
     "eslint": "^9.39.2",
     "globals": "^17.0.0",
     "jest": "^30.2.0",
-    "prettier": "^3.7.4",
+    "prettier": "^3.8.1",
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.52.0"
+    "typescript-eslint": "^8.53.1"
   },
   "dependencies": {
     "axios": "^1.13.2",
     "cheerio": "^1.1.2",
     "discord.js": "^14.25.1",
-    "diskernel": "^0.1.24",
+    "diskernel": "^0.1.25",
     "execa": "^9.6.1",
     "fast-xml-parser": "^5.3.3",
     "iconv-lite": "^0.7.2",
-    "mongoose": "^9.1.4",
+    "mongoose": "^9.1.5",
     "node-cron": "^4.2.1",
     "p-limit": "^7.2.0",
     "xmlbuilder2": "^4.0.3",
     "yauzl": "^3.2.0"
   },
-  "packageManager": "pnpm@10.28.0"
+  "packageManager": "pnpm@10.28.1"
 }
