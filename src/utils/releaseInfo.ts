@@ -49,13 +49,25 @@ function isUpdated(
   checkData: { date: Date; version?: string },
   lastData: { date: Date; version?: string },
 ): boolean {
-  return (
-    checkData.date > lastData.date &&
-    !!checkData.version &&
-    !!lastData.version &&
-    checkData.version !== lastData.version
-  );
-}
+  const checkHasVersion = checkData.version !== undefined;
+  const lastHasVersion  = lastData.version !== undefined;
+
+  if (!checkHasVersion && !lastHasVersion) {
+    return checkData.date > lastData.date;
+  }
+
+  if (checkData.version !== lastData.version) {
+    if (checkData.date.getTime() === lastData.date.getTime()) {
+      return true;
+    }
+
+    if (checkData.date > lastData.date) {
+      return true;
+    }
+  }
+
+  return false;
+}}
 
 export class ReleaseInfo {
   private static cron: ScheduledTask | undefined;
