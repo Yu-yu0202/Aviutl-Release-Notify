@@ -49,25 +49,13 @@ function isUpdated(
   checkData: { date: Date; version?: string },
   lastData: { date: Date; version?: string },
 ): boolean {
-  const checkHasVersion = checkData.version !== undefined;
-  const lastHasVersion  = lastData.version !== undefined;
+  /* thank you sigma_axis!! */
 
-  if (!checkHasVersion && !lastHasVersion) {
-    return checkData.date > lastData.date;
-  }
+  if (checkData.date > lastData.date) return true;
+  if (checkData.date < lastData.date) return false;
 
-  if (checkData.version !== lastData.version) {
-    if (checkData.date.getTime() === lastData.date.getTime()) {
-      return true;
-    }
-
-    if (checkData.date > lastData.date) {
-      return true;
-    }
-  }
-
-  return false;
-}}
+  return checkData.version !== lastData.version;
+}
 
 export class ReleaseInfo {
   private static cron: ScheduledTask | undefined;
@@ -88,9 +76,9 @@ export class ReleaseInfo {
         .slice(1)
         .findIndex((line) => line.startsWith(lineFirstCharacter)) !== -1
         ? 1 +
-          resultLines
-            .slice(1)
-            .findIndex((line) => line.startsWith(lineFirstCharacter))
+        resultLines
+          .slice(1)
+          .findIndex((line) => line.startsWith(lineFirstCharacter))
         : resultLines.length;
 
     return resultLines.slice(0, endLineNum).join("\n");
