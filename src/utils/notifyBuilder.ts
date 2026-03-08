@@ -126,6 +126,16 @@ export class NotifyBuilder {
               .setURL(this.data.zipUrl)
               .setStyle(ButtonStyle.Link),
           ),
+        new SectionBuilder()
+          .addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(`AviUtlのお部屋:`),
+          )
+          .setButtonAccessory(
+            new ButtonBuilder()
+              .setLabel("開く")
+              .setURL("https://spring-fragrance.mints.ne.jp/aviutl/")
+              .setStyle(ButtonStyle.Link),
+          ),
       );
     } else if (this.data.type === "SDK") {
       container.addTextDisplayComponents(
@@ -142,6 +152,21 @@ export class NotifyBuilder {
         new TextDisplayBuilder().setContent(
           `\`\`\`plaintext\n${this.data.sdkReleaseNote}\n\`\`\``,
         ),
+      );
+      container.addSeparatorComponents(
+        new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small),
+      );
+      container.addSectionComponents(
+        new SectionBuilder()
+          .addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(`AviUtlのお部屋:`),
+          )
+          .setButtonAccessory(
+            new ButtonBuilder()
+              .setLabel("開く")
+              .setURL("https://spring-fragrance.mints.ne.jp/aviutl/")
+              .setStyle(ButtonStyle.Link),
+          ),
       );
     }
 
