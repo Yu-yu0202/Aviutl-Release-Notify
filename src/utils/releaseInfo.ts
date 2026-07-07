@@ -308,7 +308,15 @@ export class ReleaseInfo {
       .trim()
       .split("を公開")[0] // 「を公開」を捨てる
       .trim();
-    const version = versionString.replace("AviUtl ExEdit2 ", "").trim();
+    let version = versionString.replace("AviUtl ExEdit2 ", "").trim();
+    let is_beta: boolean = true;
+    
+    if (
+      version.startsWith("version")
+    ) {
+      version = version.replace("version", "v").trim();
+      is_beta = false;
+    }
 
     if (
       lastRelease &&
@@ -321,8 +329,8 @@ export class ReleaseInfo {
       return;
     }
 
-    const exeUrl = `https://spring-fragrance.mints.ne.jp/aviutl/AviUtl2${version}_setup.exe`;
-    const zipUrl = `https://spring-fragrance.mints.ne.jp/aviutl/aviutl2${version}.zip`;
+    const exeUrl = `https://spring-fragrance.mints.ne.jp/aviutl/AviUtl2${!is_beta ? "_" : ""}${version}_setup.exe`;
+    const zipUrl = `https://spring-fragrance.mints.ne.jp/aviutl/aviutl2${!is_beta ? "_" : ""}${version}.zip`;
 
     const aviutl2ReleaseNote =
       (await this.getAviUtl2ReleaseNote(zipUrl, version, "[")) ??
